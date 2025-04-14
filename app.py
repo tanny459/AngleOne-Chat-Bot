@@ -11,57 +11,10 @@ st.set_page_config(page_title="Support Chatbot", page_icon="🤖")
 st.title("📘 AngelOne Chatbot")
 st.markdown("🤖 *Ask me anything about AngelOne support!* I’ve read the docs so you don’t have to.")
 
-# ----- Pre Process KB ----
-def clean_support_file(input_path, output_path):
-    with open(input_path, 'r', encoding='utf-8') as infile:
-        lines = infile.readlines()
-
-    cleaned_lines = []
-    keep_next = False
-
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if stripped.startswith("### Q:"):
-            cleaned_lines.append(stripped)
-            keep_next = True
-        elif stripped.startswith("**A:**") and keep_next:
-            cleaned_lines.append(stripped)
-            cleaned_lines.append("")  # Add a blank line after each Q&A pair
-            keep_next = False
-
-    with open(output_path, 'w', encoding='utf-8') as outfile:
-        outfile.write("\n".join(cleaned_lines))
-
-# ----- Load VectorDB -----
-
-def custom_split_qa(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    qa_pairs = content.strip().split("\n\n")  # split each Q&A block
-    docs = []
-
-    for pair in qa_pairs:
-        if pair.strip():  # avoid empty blocks
-            docs.append(Document(page_content=pair.strip()))
-
-    return docs
-
 @st.cache_resource
 def load_vector_db():
-    # Suppress output during the vector DB loading process
-    with st.spinner("Loading vector store..."):
-        # Step 1: Clean and format Q&A
-        clean_support_file("angelone_support_pages.txt", "cleaned_kb.txt")
-
-        # Step 2: Split into Q&A chunks
-        chunks = custom_split_qa("cleaned_kb.txt")
-
-        # Step 3: Create embeddings and FAISS DB
-        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        db = FAISS.from_documents(chunks, embeddings)
-
-        return db
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    return FAISS.load_local("faiss_index", embeddings)
 
 vectorstore = load_vector_db()
 
