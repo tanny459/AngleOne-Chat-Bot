@@ -7,5 +7,5 @@ langchain-community
 sentence-transformers
 langchain-huggingface
 groq
-faiss-cpu
-numpy==1.23.5
+faiss-gpu
+numpy==
