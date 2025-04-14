@@ -8,8 +8,8 @@ from groq import Groq
 
 # ----- Setup -----
 st.set_page_config(page_title="Support Chatbot", page_icon="🤖")
-st.title("📘 AngelOne Insurance RAG Chatbot")
-st.markdown("🤖 *Ask me anything about AngelOne support or your insurance plans!* I’ve read the docs so you don’t have to.")
+st.title("📘 AngelOne Chatbot")
+st.markdown("🤖 *Ask me anything about AngelOne support!* I’ve read the docs so you don’t have to.")
 
 # ----- Pre Process KB ----
 def clean_support_file(input_path, output_path):
