@@ -93,8 +93,7 @@ def query_groq_llama(question, top_docs):
                 """
 
     client = Groq(
-    # This is the default and can be omitted
-        api_key="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",
+        api_key=os.getenv("GROQ_API_KEY"),
     )
 
     chat_completion = client.chat.completions.create(
@@ -120,28 +119,6 @@ def query_groq_llama(question, top_docs):
 # Initialize chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
-
-# # Text input for user question
-# query = st.text_input("Your Question: ", key="query_input")
-
-# # Show conversation history
-# if st.session_state.chat_history:
-#     st.subheader("Conversation History:")
-#     for idx, (q, a) in enumerate(st.session_state.chat_history, 1):
-#         st.markdown(f"**User Question:** {q}")
-#         st.markdown(f"**Answer:** {a}")
-
-# if query:
-#     with st.spinner("Thinking..."):
-#         # Retrieve top 3 matching chunks
-#         docs = vectorstore.similarity_search(query, k=3)
-
-#         answer = query_groq_llama(query, docs)
-
-#         # Add to chat history
-#         st.session_state.chat_history.append((query, answer))
-        
-#         st.markdown(f"**{query}**\n\n{answer}")
 
 # ----- UI -----
 st.divider()
