@@ -5,16 +5,20 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import Document
 from groq import Groq  
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 # ----- Setup -----
 st.set_page_config(page_title="Support Chatbot", page_icon="🤖")
-st.title("📘 AngelOne Chatbot")
-st.markdown("🤖 *Ask me anything about AngelOne support!* I’ve read the docs so you don’t have to.")
+st.title("📘 AngelOne Insurance RAG Chatbot")
+st.markdown("🤖 *Ask me anything about AngelOne support or your insurance plans!* I’ve read the docs so you don’t have to.")
 
+# ----- Load VectorDB -----
 @st.cache_resource
 def load_vector_db():
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    return FAISS.load_local("faiss_index", embeddings)
+    return FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
 
 vectorstore = load_vector_db()
 
@@ -47,7 +51,8 @@ def query_groq_llama(question, top_docs):
                 """
 
     client = Groq(
-        api_key=os.getenv("GROQ_API_KEY"),
+    # This is the default and can be omitted
+        api_key=os.getenv("GROQ_API_KEY")
     )
 
     chat_completion = client.chat.completions.create(
