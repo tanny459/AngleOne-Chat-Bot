@@ -52,7 +52,7 @@ def query_groq_llama(question, top_docs):
 
     client = Groq(
     # This is the default and can be omitted
-        api_key=os.getenv("GROQ_API_KEY")
+        api_key="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"
     )
 
     chat_completion = client.chat.completions.create(
