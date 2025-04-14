@@ -1,0 +1,11 @@
+requests 
+beautifulsoup4 
+markdownify
+langchain
+streamlit
+langchain-community
+sentence-transformers
+langchain-huggingface
+groq
+faiss-cpu
+numpy==1.23.5
